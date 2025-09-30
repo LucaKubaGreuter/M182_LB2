@@ -1,0 +1,89 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+users:
+  - name: ${admin_user}
+    groups: [sudo, adm]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+
+ssh_deletekeys: false
+ssh_pwauth: false
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/10-hardening.conf
+    content: |
+      Protocol 2
+      PermitRootLogin no
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      ChallengeResponseAuthentication no
+      ClientAliveInterval 300
+      ClientAliveCountMax 2
+      LoginGraceTime 20
+      MaxAuthTries 3
+      MaxSessions 4
+      PubkeyAuthentication yes
+      AllowTcpForwarding no
+      X11Forwarding no
+      PrintLastLog yes
+      UsePAM yes
+  - path: /etc/fail2ban/jail.d/sshd.local
+    content: |
+      [sshd]
+      enabled = true
+      port    = 22
+      filter  = sshd
+      logpath = %(sshd_log)s
+      maxretry = 4
+      bantime = 2h
+  - path: /etc/apt/apt.conf.d/50unattended-upgrades
+    content: |
+      Unattended-Upgrade::Allowed-Origins {
+        "$${distro_id} $${distro_codename}-security";
+        "$${distro_idESMApps} $${distro_codename}-apps-security";
+        "$${distro_idESM} $${distro_codename}-infra-security";
+      };
+      Unattended-Upgrade::Remove-Unused-Dependencies "true";
+      Unattended-Upgrade::Automatic-Reboot "true";
+      Unattended-Upgrade::Automatic-Reboot-Time "03:30";
+  - path: /etc/ufw/applications.d/web.svc
+    content: |
+      [web.svc]
+      title=Web Service
+      description=Allow HTTP/HTTPS traffic
+      ports=80,443/tcp
+
+packages:
+  - ufw
+  - fail2ban
+  - unattended-upgrades
+  - auditd
+  - gnupg
+  - apt-transport-https
+  - nginx
+
+runcmd:
+  - systemctl reload ssh || systemctl restart ssh
+
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow 22/tcp
+  - ufw allow "Web Service"
+  - yes | ufw enable
+
+  - systemctl enable --now fail2ban
+
+  - systemctl enable --now unattended-upgrades
+
+  - systemctl enable --now auditd
+
+  - systemctl enable --now nginx
+
+  - sed -i 's/# server_tokens off;/server_tokens off;/' /etc/nginx/nginx.conf
+  - sed -i 's/keepalive_timeout 65;/keepalive_timeout 20;/' /etc/nginx/nginx.conf
+  - nginx -t && systemctl reload nginx
+
+final_message: "System hardening abgeschlossen. UFW, Fail2Ban, unattended-upgrades und auditd aktiv."
