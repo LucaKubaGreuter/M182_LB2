@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="card">
+  <h1 class="card-title">Access denied</h1>
+
+  <div class="help-text" style="text-align:center;">
+    You are not authorized to view this page.
+    <br><br>
+    This area is protected:
+    <br>• Hardened Linux server
+    <br>• bcrypt passwords
+    <br>• 2-Factor Auth required
+  </div>
+
+  <div class="btn-row">
+    <a href="/login" style="
+      text-decoration:none;
+      color:#fff;
+      display:block;
+    ">
+      <button class="btn primary">Go to login</button>
+    </a>
+  </div>
+
+  <div class="help-text" style="margin-top:1.5rem;text-align:center;">
+    If you don't have an account yet, register first and activate 2FA.
+  </div>
+</div>
+{% endblock %}

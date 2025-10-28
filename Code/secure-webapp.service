@@ -1,0 +1,25 @@
+[Unit]
+Description=Secure WebApp
+After=network.target
+
+[Service]
+User=secadmin
+Group=secadmin
+WorkingDirectory=/opt/secure-webapp
+
+Environment="SECRET_KEY=SUPER_GEHEIM_LANGER_RANDOM_STRING"
+Environment="DATABASE_URL=sqlite:////opt/secure-webapp/app.db"
+
+# Socket liegt im Projektverzeichnis, Nginx greift darauf zu
+ExecStart=/opt/secure-webapp/venv/bin/gunicorn --workers 3 --bind unix:/opt/secure-webapp/run/secure-webapp.sock 'app:create_app()'
+
+# Neustarten wenn crasht
+Restart=on-failure
+RestartSec=2
+
+# Prozess-Isolation (Hardening)
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

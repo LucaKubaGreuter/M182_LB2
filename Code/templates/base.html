@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title or "Secure WebApp" }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+      :root {
+        --bg-page: #0f172a;
+        --bg-card: #1e2537;
+        --bg-card-elev: #273349;
+        --txt-primary: #f8fafc;
+        --txt-dim: #94a3b8;
+        --accent: #4f46e5;
+        --accent-hover: #6366f1;
+        --danger: #dc2626;
+        --danger-hover: #ef4444;
+        --radius-xl: 1rem;
+        --radius-sm: .5rem;
+        --border-card: #334155;
+        --border-input: #475569;
+        --shadow-card: 0 30px 80px rgba(0,0,0,.8);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg-page);
+        color: var(--txt-primary);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header bar (top navigation / status) */
+      header.site-header {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #1e293b;
+        padding: .75rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand {
+        font-size: .9rem;
+        font-weight: 600;
+        color: var(--txt-primary);
+      }
+
+      .brand span {
+        color: var(--accent);
+      }
+
+      .nav-hint {
+        font-size: .7rem;
+        color: var(--txt-dim);
+        text-align: right;
+        line-height: 1.2;
+      }
+
+      /* Main layout wrapper */
+      main.page {
+        flex: 1;
+        width: 100%;
+        max-width: 400px;
+        margin: 2rem auto 4rem auto;
+        padding: 0 1rem 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Card / panel */
+      .card {
+        background: radial-gradient(circle at 20% 20%, var(--bg-card-elev) 0%, var(--bg-card) 60%);
+        border-radius: var(--radius-xl);
+        padding: 2rem 2rem 1.5rem;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--border-card);
+        width: 100%;
+      }
+
+      .card + .card {
+        margin-top: 2rem;
+      }
+
+      h1.card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--txt-primary);
+        margin: 0 0 1.5rem 0;
+        text-align: center;
+      }
+
+      /* Form elements */
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        font-size: .75rem;
+        font-weight: 500;
+        color: var(--txt-primary);
+        margin-bottom: .4rem;
+      }
+
+      .help-text {
+        font-size: .7rem;
+        color: var(--txt-dim);
+        margin-top: .25rem;
+        line-height: 1.4;
+      }
+
+      input[type="email"],
+      input[type="password"],
+      input[type="text"] {
+        width: 100%;
+        background-color: rgba(15, 23, 42, 0.6);
+        color: var(--txt-primary);
+        border: 1px solid var(--border-input);
+        border-radius: var(--radius-sm);
+        padding: .7rem .75rem;
+        font-size: .9rem;
+        outline: none;
+      }
+
+      input[type="email"]:focus,
+      input[type="password"]:focus,
+      input[type="text"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(79,70,229,.35);
+      }
+
+      /* Buttons */
+      .btn-row {
+        margin-top: 1.25rem;
+      }
+
+      button.btn {
+        width: 100%;
+        border: 0;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: .9rem;
+        padding: .8rem .9rem;
+        cursor: pointer;
+        transition: background-color .12s linear, box-shadow .12s linear;
+        color: #fff;
+      }
+
+      button.primary {
+        background-color: var(--accent);
+      }
+      button.primary:hover {
+        background-color: var(--accent-hover);
+        box-shadow: 0 15px 40px rgba(99,102,241,.4);
+      }
+
+      button.danger {
+        background-color: var(--danger);
+      }
+      button.danger:hover {
+        background-color: var(--danger-hover);
+        box-shadow: 0 15px 40px rgba(239,68,68,.4);
+      }
+
+      /* QR image */
+      .qr-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      img.qr {
+        width: 180px;
+        height: 180px;
+        background: #fff;
+        border-radius: var(--radius-sm);
+        padding: .5rem;
+        box-shadow: 0 20px 40px rgba(0,0,0,.8);
+        border: 1px solid #475569;
+      }
+
+      .note {
+        font-size: .7rem;
+        color: var(--txt-dim);
+        text-align: center;
+        line-height: 1.4;
+        margin-top: 1rem;
+      }
+
+      /* Dashboard layout override */
+      .dashboard-wrapper {
+        max-width: 480px;
+        width: 100%;
+      }
+
+      .hero-img {
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--border-card);
+        display: block;
+        margin-bottom: 2rem;
+      }
+
+      .account-card h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--txt-primary);
+        margin: 0 0 1rem 0;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <header class="site-header">
+      <div class="brand">Secure<span>WebApp</span></div>
+      <div class="nav-hint">
+        <div>Hardened Linux Host</div>
+        <div>2FA Protected Access</div>
+      </div>
+    </header>
+
+    <main class="page">
+      {% block body %}{% endblock %}
+    </main>
+
+  </body>
+</html>

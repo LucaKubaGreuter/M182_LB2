@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="dashboard-wrapper">
+
+  <img
+    src="{{ url_for('static', filename='dashboard.jpg') }}"
+    alt="Welcome"
+    class="hero-img"
+  >
+
+  <div class="card account-card">
+    <h2>Account</h2>
+
+    <form method="post" action="/delete_account">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="btn-row">
+        <button type="submit" class="btn danger">Delete my account</button>
+      </div>
+    </form>
+
+    <div class="help-text">
+      Deletes user from DB and logs you out.
+    </div>
+  </div>
+
+</div>
+{% endblock %}

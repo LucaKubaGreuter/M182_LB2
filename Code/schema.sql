@@ -1,0 +1,8 @@
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  is_active INTEGER DEFAULT 1,
+  totp_secret TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

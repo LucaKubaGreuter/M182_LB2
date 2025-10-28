@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="card">
+  <h1 class="card-title">Scan your 2FA code</h1>
+
+  <div class="qr-wrapper">
+    {% if qr %}
+      <img class="qr" src="{{ qr }}" alt="QR Code for TOTP setup">
+    {% else %}
+      <div class="help-text">QR code not available.</div>
+    {% endif %}
+  </div>
+
+  <div class="help-text">
+    1. Scanne den Code in deiner Authenticator App.<br>
+    2. Beim Login musst du E-Mail + Passwort + 6-stelligen Code eingeben.
+  </div>
+
+  <div class="help-text" style="margin-top:1.5rem;">
+    Weiter mit <strong>/login</strong>.
+  </div>
+</div>
+{% endblock %}
