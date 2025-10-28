@@ -1,11 +1,11 @@
-## **Projektdokumentation — Systemsicherheit implementieren**
+## Projektdokumentation — Systemsicherheit implementieren
 
-### **1. Projektübersicht**
+### 1. Projektübersicht
 
-**Thema:**
+Thema:
 Absicherung eines Linux-Servers mit einer sicheren Webanwendung.
 
-**Zielsetzung:**
+Zielsetzung:
 
 * Bereitstellung und Härtung eines Linux-Servers in Azure nach Security-Best-Practices.
 * Umsetzung von Sicherheitsmechanismen auf Betriebssystem- und Anwendungsebene.
@@ -13,65 +13,65 @@ Absicherung eines Linux-Servers mit einer sicheren Webanwendung.
 
 ---
 
-### **2. Infrastrukturaufbau mit Terraform**
+### 2. Infrastrukturaufbau mit Terraform
 
-Die Serverinfrastruktur wurde vollständig automatisiert mit **Terraform** in **Azure** erstellt.
+Die Serverinfrastruktur wurde vollständig automatisiert mit Terraform** in Azure erstellt.
 
-**Wichtige Punkte der Infrastruktur:**
+Wichtige Punkte der Infrastruktur:
 
-* **Resource Group:** `rg-lucgr-001`
-* **Region:** North Europe (nahegelegen, kostengünstig)
-* **Virtuelles Netzwerk** mit Subnetz für die Web-VM
-* **Network Security Group (NSG):**
+* Resource Group: `rg-lucgr-001`
+* **Region: North Europe (nahegelegen, kostengünstig)
+* Virtuelles Netzwerk mit Subnetz für die Web-VM
+* Network Security Group (NSG):
 
   * SSH (Port 22) — nur bei Bedarf IP-beschränkt
   * HTTP (80), HTTPS (443) — für Webzugriff
-* **Linux-VM:** Ubuntu 24.04 LTS
-* **Benutzer:** `secadmin`
-* **Authentifizierung:** ausschließlich SSH-Key (keine Passwörter)
-* **Managed Identity:** aktiviert für spätere Integrationen
-* **Öffentliche IP:** für Zugriff auf Webanwendung
+* Linux-VM: Ubuntu 24.04 LTS
+* Benutzer: `secadmin`
+* Authentifizierung: ausschließlich SSH-Key (keine Passwörter)
+* Managed Identity: aktiviert für spätere Integrationen
+* Öffentliche IP: für Zugriff auf Webanwendung
 
-**SSH-Key Handling:**
+SSH-Key Handling:
 
 * SSH-Key lokal mit `ssh-keygen -t ed25519` erstellt.
 * Nur der Public Key wurde an Terraform übergeben.
 * Passwort-Authentifizierung ist vollständig deaktiviert.
 
-**Automatisiertes Hardening via cloud-init:**
+Automatisiertes Hardening via cloud-init:
 Beim Deployment wurde ein Skript eingebunden, das die grundlegenden Sicherheitsmaßnahmen automatisiert aktivierte:
 
-* **SSH-Härtung:**
+* SSH-Härtung:
 
   * Root-Login deaktiviert
   * Passwort-Authentifizierung deaktiviert
   * Authentifizierungsversuche limitiert
 
-* **Firewall (UFW):**
+* Firewall (UFW):
 
   * Default: inbound `deny`
   * Erlaubt: SSH, HTTP, HTTPS
 
-* **Fail2Ban:**
+* Fail2Ban:
 
   * Schutz vor Brute-Force-Angriffen auf SSH
 
-* **Unattended-Upgrades:**
+* Unattended-Upgrades:
 
   * Automatische Installation sicherheitsrelevanter Updates
 
-* **Auditd:**
+* Auditd:
 
   * Aktiv für Sicherheits- und Systemlogging
 
-* **Nginx (Reverse Proxy):**
+* Nginx (Reverse Proxy):
 
   * Installiert und minimal gehärtet
   * Grundlage für HTTPS, Proxy-Routing, CSP
 
 ---
 
-### **3. Zugriff & Tests**
+### 3. Zugriff & Tests
 
 Nach Bereitstellung:
 
@@ -80,7 +80,7 @@ terraform output ssh_command
 ssh -i ~/.ssh/id_ed25519 secadmin@172.161.18.141
 ```
 
-**Prüfungen:**
+Prüfungen:
 
 * Firewall:
 
@@ -116,50 +116,50 @@ ssh -i ~/.ssh/id_ed25519 secadmin@172.161.18.141
 
 ---
 
-### **4. Sicherheit & Gründe**
+### 4. Sicherheit & Gründe
 
-* **SSH-Keys statt Passwörter:** verhindert Brute-Force-Angriffe.
-* **Firewall + NSG:** doppelte Netzsicherung (Azure + OS).
-* **Fail2Ban:** dynamische Sperre bei wiederholten Login-Versuchen.
-* **Unattended-Upgrades:** sichert aktuelle Patches ohne manuellen Aufwand.
-* **Auditd:** volle Nachvollziehbarkeit sicherheitsrelevanter Ereignisse.
-* **Nginx-Härtung:** minimierte Angriffsfläche.
+* SSH-Keys statt Passwörter: verhindert Brute-Force-Angriffe.
+* Firewall + NSG: doppelte Netzsicherung (Azure + OS).
+* Fail2Ban: dynamische Sperre bei wiederholten Login-Versuchen.
+* Unattended-Upgrades: sichert aktuelle Patches ohne manuellen Aufwand.
+* Auditd: volle Nachvollziehbarkeit sicherheitsrelevanter Ereignisse.
+* Nginx-Härtung: minimierte Angriffsfläche.
 
 ---
 
-### **5. Entwicklung der sicheren Webanwendung**
+### 5. Entwicklung der sicheren Webanwendung
 
-#### **Technologie**
+#### Technologie
 
 * Framework: Flask (Python 3.12)
 * Reverse Proxy: Nginx
 * Application Server: Gunicorn (über systemd-Dienst)
 * Datenbank: SQLite (lokal, verschlüsselt über Dateiberechtigungen)
 
-#### **Funktionalität**
+#### Funktionalität
 
-1. **Registrierung mit Passwort-Hashing:**
+1. Registrierung mit Passwort-Hashing:
 
    * Speicherung von Passwörtern nur als bcrypt-Hash (mit Salt).
    * Mindestpasswortlänge: 8 Zeichen.
 
-2. **Zwei-Faktor-Authentifizierung (2FA):**
+2. Zwei-Faktor-Authentifizierung (2FA):
 
    * Nach Registrierung wird automatisch ein TOTP-Secret generiert.
    * QR-Code für Authenticator-App (z. B. Google Authenticator) wird angezeigt.
    * Beim Login wird zusätzlich ein 6-stelliger Code abgefragt.
 
-3. **Login mit Session Handling:**
+3. Login mit Session Handling:
 
    * Session-ID wird serverseitig gespeichert.
    * Login nur bei gültigem Passwort und gültigem 2FA-Code möglich.
 
-4. **Account-Verwaltung:**
+4. Account-Verwaltung:
 
    * Eingeloggte Benutzer können ihren Account löschen (`/delete_account`).
    * Löschung entfernt Datensatz vollständig aus der DB und beendet Session.
 
-5. **Geschützter Dashboard-Bereich:**
+5. Geschützter Dashboard-Bereich:
 
    * Nur für eingeloggte Benutzer sichtbar.
    * Anzeige eines Beispielbildes (`/static/dashboard.jpg`).
@@ -167,16 +167,16 @@ ssh -i ~/.ssh/id_ed25519 secadmin@172.161.18.141
 
 ---
 
-### **6. Design & Sicherheit auf Anwendungsebene**
+### 6. Design & Sicherheit auf Anwendungsebene
 
-#### **Visuelles Design**
+#### Visuelles Design
 
-* Einheitliches **Dark Theme** (CSS in `base.html` eingebettet).
+* Einheitliches Dark Theme (CSS in `base.html` eingebettet).
 * Konsistente Struktur über alle Seiten: Register, Login, QR-Setup, Dashboard, Unauthorized.
 * CSP-konform ohne externe CSS/JS-Bibliotheken.
 * Responsives Layout mit Fokus auf Lesbarkeit und Sicherheit.
 
-#### **CSP (Content Security Policy)**
+#### CSP (Content Security Policy)
 
 ```nginx
 add_header Content-Security-Policy \
@@ -188,33 +188,33 @@ add_header Content-Security-Policy \
 * Inline-CSS ausdrücklich erlaubt, kein externes JS.
 * Keine Skripte, keine Frames → Minimale Angriffsfläche.
 
-#### **Weitere Härtung**
+#### Weitere Härtung
 
-* **Gunicorn** läuft als systemd-Service, dauerhaft aktiv.
-* **Nginx Proxy** bindet an HTTPS (Let's Encrypt-Zertifikat via Certbot).
-* **Fail2Ban** schützt weiterhin gegen Angriffe auf Port 22.
+* Gunicorn läuft als systemd-Service, dauerhaft aktiv.
+* Nginx Proxy bindet an HTTPS (Let's Encrypt-Zertifikat via Certbot).
+* Fail2Ban schützt weiterhin gegen Angriffe auf Port 22.
 
 ---
 
-### **7. Fehlerbehandlung & Benutzerführung**
+### 7. Fehlerbehandlung & Benutzerführung
 
-* **Unauthorized-Zugriff (401):**
+* Unauthorized-Zugriff (401):
 
   * Eigene Seite `unauthorized.html` im Dark-Theme.
   * Zeigt strukturierte Fehlermeldung und sicheren Rücklink zu `/login`.
   * Keine technischen Details, keine sensiblen Daten in Fehlerausgabe.
 
-* **Double Registration (Duplicate Email):**
+* Double Registration (Duplicate Email):
 
   * Wird abgefangen, Nutzer bekommt Meldung „User existiert bereits“.
 
-* **Ungültiger 2FA-Code:**
+* Ungültiger 2FA-Code:
 
   * Fehlermeldung „2FA required or invalid“, kein Hinweis auf Passwortgültigkeit.
 
 ---
 
-### **8. Lessons Learned**
+### 8. Lessons Learned
 
 * CSP muss exakt abgestimmt werden – zu restriktiv blockiert auch interne Styles.
 * QR-Codes über Base64 `data:`-URIs funktionieren sicherer als temporäre Files.
@@ -225,15 +225,15 @@ add_header Content-Security-Policy \
 
 ---
 
-### **9. Fazit**
+### 9. Fazit
 
-Das Projekt zeigt eine vollständige Umsetzung von **Systemsicherheit auf Infrastruktur- und Anwendungsebene**:
+Das Projekt zeigt eine vollständige Umsetzung von Systemsicherheit auf Infrastruktur- und Anwendungsebene:
 
-* **Infrastruktur:** automatisch gehärtet, sicher, wartungsarm.
-* **Webapplikation:** modern, geschützt durch bcrypt + 2FA + sichere Sessions.
-* **Sichtbarer Sicherheitsnachweis:** QR-Setup, Login mit Authenticator, gesperrte Bereiche.
-* **Design:** konsistent, Dark-Theme, CSP-konform.
-* **Betrieb:** stabil über systemd, überwacht durch Nginx und Firewall.
+* Infrastruktur: automatisch gehärtet, sicher, wartungsarm.
+* Webapplikation: modern, geschützt durch bcrypt + 2FA + sichere Sessions.
+* Sichtbarer Sicherheitsnachweis: QR-Setup, Login mit Authenticator, gesperrte Bereiche.
+* Design: konsistent, Dark-Theme, CSP-konform.
+* Betrieb: stabil über systemd, überwacht durch Nginx und Firewall.
 
-**Ergebnis:**
+  Ergebnis:
 Ein vollständig gehärteter Linux-Webserver mit sicherer, ästhetischer und funktionaler Webanwendung, die moderne Authentifizierungsmechanismen umsetzt und dabei den Fokus auf reale Angriffsszenarien und Schutzmaßnahmen legt.
