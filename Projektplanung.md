@@ -56,7 +56,7 @@ Theorie:
 * Fail2Ban: Schutz gegen Brute-Force-Angriffe durch IP-Blocking nach wiederholtem Fehlversuch (Quelle: fail2ban.readthedocs.io).
 * Auditd: Logt sicherheitsrelevante Systemereignisse (Dateiänderungen, sudo, Authentifizierungen).
 
-Diese Maßnahmen dienen dazu, Schutz in Tiefe (Defense in Depth) umzusetzen — also mehrere Sicherheitsebenen, die sich gegenseitig absichern.
+Diese Massnahmen dienen dazu, Schutz in Tiefe (Defense in Depth) umzusetzen — also mehrere Sicherheitsebenen, die sich gegenseitig absichern.
 Diese Massnahmen dienen dazu, **Schutz in Tiefe (Defense in Depth)** umzusetzen — also mehrere Sicherheitsebenen, die sich gegenseitig absichern.
 
 ---
