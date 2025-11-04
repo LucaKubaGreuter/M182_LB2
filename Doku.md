@@ -28,7 +28,7 @@ Wichtige Punkte der Infrastruktur:
   * HTTP (80), HTTPS (443) — für Webzugriff
 * Linux-VM: Ubuntu 24.04 LTS
 * Benutzer: `secadmin`
-* Authentifizierung: ausschließlich SSH-Key (keine Passwörter)
+* Authentifizierung: ausschliesslich SSH-Key (keine Passwörter)
 * Managed Identity: aktiviert für spätere Integrationen
 * Öffentliche IP: für Zugriff auf Webanwendung
 
@@ -39,7 +39,7 @@ SSH-Key Handling:
 * Passwort-Authentifizierung ist vollständig deaktiviert.
 
 Automatisiertes Hardening via cloud-init:
-Beim Deployment wurde ein Skript eingebunden, das die grundlegenden Sicherheitsmaßnahmen automatisiert aktivierte:
+Beim Deployment wurde ein Skript eingebunden, das die grundlegenden Sicherheitsmassnahmen automatisiert aktivierte:
 
 * SSH-Härtung:
 
@@ -236,4 +236,4 @@ Das Projekt zeigt eine vollständige Umsetzung von Systemsicherheit auf Infrastr
 * Betrieb: stabil über systemd, überwacht durch Nginx und Firewall.
 
   Ergebnis:
-Ein vollständig gehärteter Linux-Webserver mit sicherer, ästhetischer und funktionaler Webanwendung, die moderne Authentifizierungsmechanismen umsetzt und dabei den Fokus auf reale Angriffsszenarien und Schutzmaßnahmen legt.
+Ein vollständig gehärteter Linux-Webserver mit sicherer, ästhetischer und funktionaler Webanwendung, die moderne Authentifizierungsmechanismen umsetzt und dabei den Fokus auf reale Angriffsszenarien und Schutzmassnahmen legt.

@@ -6,7 +6,7 @@ Thema:
 Absicherung eines Linux-Servers mit sicherer Webanwendung (Registrierung, Login, Zwei-Faktor-Authentifizierung).
 
 Projektziel:
-Ein System entwickeln, das zeigt, wie Sicherheitsmaßnahmen sowohl auf Betriebssystem- als auch auf Anwendungsebene praktisch umgesetzt werden können.
+Ein System entwickeln, das zeigt, wie Sicherheitsmassnahmen sowohl auf Betriebssystem- als auch auf Anwendungsebene praktisch umgesetzt werden können.
 
 Der Fokus liegt nicht auf der Komplexität der Anwendung, sondern auf der Integration sicherheitsrelevanter Mechanismen wie Systemhärtung, Authentifizierung, Verschlüsselung und Zugriffsschutz.
 
@@ -30,7 +30,7 @@ Diese drei Prinzipien bilden das sog. CIA-Triade-Modell (Quelle: ISO/IEC 27001:2
 
 #### 3.1. Cloud-Infrastruktur
 
-Ziel: Bereitstellung einer kontrollierten, realistischen Umgebung für Sicherheitsmaßnahmen.
+Ziel: Bereitstellung einer kontrollierten, realistischen Umgebung für Sicherheitsmassnahmen.
 Theorie:
 
 * Azure Virtual Machines bieten reproduzierbare, skalierbare Umgebungen mit dedizierter Netzwerk- und Sicherheitskonfiguration.
@@ -39,7 +39,7 @@ Theorie:
 
 Sicherheitsaspekte:
 
-* SSH-Authentifizierung ausschließlich über Public Key (asymmetrische Kryptographie, RFC 4251).
+* SSH-Authentifizierung ausschliesslich über Public Key (asymmetrische Kryptographie, RFC 4251).
 * Netzwerksicherheitsgruppen (NSG) zur Einschränkung von eingehendem Verkehr (Firewall auf Azure-Ebene).
 * Unattended Upgrades für automatische Sicherheitspatches auf Betriebssystemebene.
 
@@ -57,6 +57,7 @@ Theorie:
 * Auditd: Logt sicherheitsrelevante Systemereignisse (Dateiänderungen, sudo, Authentifizierungen).
 
 Diese Maßnahmen dienen dazu, Schutz in Tiefe (Defense in Depth) umzusetzen — also mehrere Sicherheitsebenen, die sich gegenseitig absichern.
+Diese Massnahmen dienen dazu, **Schutz in Tiefe (Defense in Depth)** umzusetzen — also mehrere Sicherheitsebenen, die sich gegenseitig absichern.
 
 ---
 
@@ -106,7 +107,7 @@ Frameworks und Libraries:
 * PyOTP (TOTP-Algorithmus)
 * bcrypt (Passworthashing)
 
-Diese Komponenten ermöglichen eine praxisnahe Demonstration von Secure Authentication & Access Control gemäß OWASP Application Security Verification Standard (ASVS) Level 1–2.
+Diese Komponenten ermöglichen eine praxisnahe Demonstration von Secure Authentication & Access Control gemäss OWASP Application Security Verification Standard (ASVS) Level 1–2.
 
 ---
 
